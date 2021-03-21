@@ -1,0 +1,34 @@
+#!/bin/bash
+
+debug=0
+[[ $1 = -d ]] && debug=1 && awkprint=print && shift
+
+# heh heh
+[[ $1 != - ]] && exec < ${0}.${1:-symbols}
+
+site=${0%/*}/googlefinance.awk
+
+while read exchange symbol ; do
+
+	query=$(gawk -f $site -v exchange=$exchange -v symbol=$symbol < /dev/null)
+
+	[[ $debug = 1 ]] && html=$symbol.html
+
+	[[ $debug = 1 ]] && echo $query
+
+	[[ -n $query ]] &&
+	wget -q -O - $query |\
+	tee $html |\
+	gawk -f $site |\
+	gawk -F: '
+		{
+		'$awkprint'
+		yield = "-- "
+		if (($4+0) > 0) yield = sprintf("%5.2f%%", $6*100/$4)
+		payout = "-- "
+		if (($5+0) > 0) payout = sprintf("%5.2f%%", $6*100/$5)
+		printf "%6s (%7s) %10s %s\n",yield,payout,$2,$3
+		}
+		'
+
+done
