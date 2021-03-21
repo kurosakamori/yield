@@ -1,5 +1,28 @@
 #!/bin/bash
 
+# Usage: yield [-d] [- | <portfolio>]
+#
+# Examples:
+#
+# yield
+#	Output yield information for all the stocks in the file
+#	yield.symbols, located in the same directory as this script.
+#	yield.symbols is a text file.  Each line has two words, a
+#	stock exchange and a ticker symbol.
+#
+# yield <portfolio>
+#	Output yield information for all the stocks in the file
+#	yield.<portfolio>, located in the same directory as this
+#	script.
+#
+# yield -
+#	Output yield information for stocks read from standard input.
+#
+# yield -d ...
+#	Output debug information.  Display internal commands before
+#	executing them, and save downloaded HTML files to the current
+#	directory.
+
 debug=0
 [[ $1 = -d ]] && debug=1 && awkprint=print && shift
 
