@@ -10,6 +10,8 @@ BEGIN { FS = "[<>]" }
 			}
 		}
 	if (gsub(/ CAD/,"",cap) > 0) cap = "$" cap
+	if (gsub(/ EUR/,"",cap) > 0) cap = "€" cap
+	if (gsub(/ GBP/,"",cap) > 0) cap = "£" cap
 	if (gsub(/ JPY/,"",cap) > 0) cap = "¥" cap
 	if (gsub(/ USD/,"",cap) > 0) cap = "$" cap
 	}
@@ -26,7 +28,8 @@ BEGIN { FS = "[<>]" }
 			}
 		}
 	gsub(/&amp;/,"\\&",name)
-	gsub(/[,$¥]/,"",price)
+	gsub(/&#39;/,"'",name)
+	gsub(/[^0-9.]/,"",price)
 	}
 
 /Diluted EPS/ {
@@ -55,6 +58,20 @@ BEGIN { FS = "[<>]" }
 END {
 	if (NR == 0)
 		{
+		if (tolower(exchange) ~ /^bi/)
+			print "https://www.google.com/finance/quote/" symbol ":BIT"
+		if (tolower(exchange) ~ /^bm/)
+			print "https://www.google.com/finance/quote/" symbol ":BME"
+		if (tolower(exchange) ~ /^e.*a(m(s(t(e(r(d(am?)?)?)?)??)?)?)?$/)
+			print "https://www.google.com/finance/quote/" symbol ":AMS"
+		if (tolower(exchange) ~ /^e.*b(r(u(s(s(e(ls?)?)?)??)?)?)?$/)
+			print "https://www.google.com/finance/quote/" symbol ":EBR"
+		if (tolower(exchange) ~ /^e.*p(a(r(is?)?)?)?$/)
+			print "https://www.google.com/finance/quote/" symbol ":EPA"
+		if (tolower(exchange) ~ /^f|^x/)
+			print "https://www.google.com/finance/quote/" symbol ":ETR"
+		if (tolower(exchange) ~ /^l/)
+			print "https://www.google.com/finance/quote/" symbol ":LON"
 		if (tolower(exchange) ~ /^na/)
 			print "https://www.google.com/finance/quote/" symbol ":NASDAQ"
 		if (tolower(exchange) ~ /^ny/)
