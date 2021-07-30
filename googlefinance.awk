@@ -3,7 +3,7 @@ BEGIN { FS = "[<>]" }
 /Market cap/ {
 	for (i=1; i<=NF; i++) {
 		if ($i == "Market cap") {
-			while ($i !~ /class="P6K39c"/ && i < NF) i++
+			while ($i !~ /class="M2CUtd"/ && i < NF) i++
 			i++
 			cap = $i
 			break
@@ -46,7 +46,7 @@ BEGIN { FS = "[<>]" }
 /Dividend yield/ {
 	for (i=1; i<=NF; i++) {
 		if ($i == "Dividend yield") {
-			while ($i !~ /class="P6K39c"/ && i < NF) i++
+			while ($i !~ /class="M2CUtd"/ && i < NF) i++
 			i++
 			yield = $i
 			gsub(/[%]/,"",yield)
