@@ -3,7 +3,9 @@ BEGIN { FS = "[<>]" }
 /Market cap/ {
 	for (i=1; i<=NF; i++) {
 		if ($i == "Market cap") {
-			while ($i !~ /class="M2CUtd"/ && i < NF) i++
+			while ($i !~ /^div/ && i < NF) i++
+			i++
+			while ($i !~ /^div/ && i < NF) i++
 			i++
 			cap = $i
 			break
@@ -16,19 +18,25 @@ BEGIN { FS = "[<>]" }
 	if (gsub(/ USD/,"",cap) > 0) cap = "$" cap
 	}
 
-/h1 class=/ {
+/aria-level="1"/ {
 	for (i=1; i<=NF; i++) {
-		if ($i ~ /h1 class=/) {
-			i++
-			name = $i
-			while ($i !~ /class="YMlKec fxKbKc"/ && i < NF) i++
-			i++
-			price = $i
+		if ($i ~ /aria-level="1"/) {
+			name = $(i+1)
 			break
 			}
 		}
 	gsub(/&amp;/,"\\&",name)
 	gsub(/&#39;/,"'",name)
+	}
+
+/data-last-price=/ {
+	for (i=1; i<=NF; i++) {
+		if ($i ~ /data-last-price=/) {
+			while ($i !~ /^[^a-z/]/ && i < NF) i++
+			price = $i
+			break
+			}
+		}
 	gsub(/[^0-9.]/,"",price)
 	}
 
@@ -46,7 +54,9 @@ BEGIN { FS = "[<>]" }
 /Dividend yield/ {
 	for (i=1; i<=NF; i++) {
 		if ($i == "Dividend yield") {
-			while ($i !~ /class="M2CUtd"/ && i < NF) i++
+			while ($i !~ /^div/ && i < NF) i++
+			i++
+			while ($i !~ /^div/ && i < NF) i++
 			i++
 			yield = $i
 			gsub(/[%]/,"",yield)
