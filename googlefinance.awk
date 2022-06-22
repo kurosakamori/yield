@@ -40,9 +40,11 @@ BEGIN { FS = "[<>]" }
 	gsub(/[^0-9.]/,"",price)
 	}
 
-/Diluted EPS/ {
+/Earnings per share/ {
 	for (i=1; i<=NF; i++) {
-		if ($i == "Diluted EPS") {
+		if ($i == "Earnings per share") {
+			while ($i !~ /class=/ && i < NF) i++
+			i++
 			while ($i !~ /class=/ && i < NF) i++
 			i++
 			eps = $i * 4
