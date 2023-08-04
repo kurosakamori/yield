@@ -29,7 +29,7 @@ debug=0
 # heh heh
 [[ $1 != - ]] && exec < ${0}.${1:-symbols}
 
-site=${0%/*}/googlefinance.awk
+site=${0%/*}/financialtimes.awk
 
 while read exchange symbol ; do
 
@@ -49,7 +49,7 @@ while read exchange symbol ; do
 		yield = "-- "
 		if (($4+0) > 0) yield = sprintf("%5.2f%%", $6*100/$4)
 		payout = "-- "
-		if (($5+0) > 0) payout = sprintf("%5.2f%%", $6*100/$5)
+		if (($5+0) > ($6/10)) payout = sprintf("%5.2f%%", $6*100/$5)
 		printf "%6s (%7s) %10s %s\n",yield,payout,$2,$3
 		}
 		'
